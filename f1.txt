@@ -1,0 +1,54 @@
+#ADD:  MACRO D, A1, A2
+       LDAA A1
+       ADDA A2
+       STAA D    
+       #ENDM 
+
+#SUB   MACRO D, A1, A2
+       LDAA A1
+       SUBA A2
+       STAA D
+       #ENDM
+
+#MULT:  MACRO D, A1, P
+        LDAB P
+        LDAA A1
+L1      ASLA
+        DECB
+        BNE L1
+        STAA D
+        #ENDM
+
+#DIV: MACRO D, A1, P
+      LDAB P
+      LDAA A1
+L1    ASRA
+      DECB
+      BNE L1
+      STAA D
+      #ENDM
+
+#REM:   MACRO D, A1, P
+        LDAA P
+        LDAB #1
+L1      ASLB
+        DECA
+        BNE L1
+        DECB
+        ANDB A1
+        STAB D
+        #ENDM
+
+        PROG
+        #DIV 150H, 250H, 350H
+        LDAA 3
+        #ADD 100H, 200H, 300H
+        #REM 100H, 200H, 300H
+        INCA
+        #if ($2="x") MULT 300H, 400H, 500H
+        STAA 500H
+        L1: LDAA #20H
+        STAA 2000H
+        #REM 200H, 300H, 400H
+        #if ($2="ABC") SUB 10H, 20H, 30H
+        END
